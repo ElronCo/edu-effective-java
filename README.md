@@ -1,1 +1,1 @@
-Effective Java training examples. 
+Effective Java training examples. > ElronCo @ 2014
