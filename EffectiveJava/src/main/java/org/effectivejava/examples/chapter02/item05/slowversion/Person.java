@@ -1,0 +1,34 @@
+// Creates lots of unnecessary duplicate objects - page 20-21
+package org.effectivejava.examples.chapter02.item05.slowversion;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
+public class Person {
+	private final Date birthDate;
+
+	public Person(Date birthDate) {
+		// Defensive copy - see Item 39
+		this.birthDate = new Date(birthDate.getTime());
+	}
+
+	// Other fields, methods omitted
+
+	// DON'T DO THIS!
+	public boolean isBabyBoomer() {
+		// Unnecessary allocation of expensive object
+		Calendar gmtCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		gmtCal.set(1946, Calendar.JANUARY, 1, 0, 0, 0);
+		Date boomStart = gmtCal.getTime();
+		gmtCal.set(1965, Calendar.JANUARY, 1, 0, 0, 0);
+		Date boomEnd = gmtCal.getTime();
+		return birthDate.compareTo(boomStart) >= 0 && birthDate.compareTo(boomEnd) < 0;
+	}
+
+	public static void main(String[] args) {
+		for (int i = 0; i < 10000000; i++) {
+			new Person(new Date()).isBabyBoomer();
+		}
+	}
+}
